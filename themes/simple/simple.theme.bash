@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 
+# prompt themeing
+
+#added TITLEBAR for updating the tab and window titles with the pwd
+case $TERM in
+	xterm*)
+	TITLEBAR="\[\033]0;\w\007\]"
+	;;
+	*)
+	TITLEBAR=""
+	;;
+esac
+
 function prompt_command() {
-    PS1="\n[\[\e[32m\]\u\[\e[0m\]@\[\e[35m\]\h \[\e[36;1m\]\w\[\e[0m\]] \
-\e[33m{$(date +'%H:%M:%S')}\
-${reset_color}$(scm_prompt_info) \
-$(RETVAL="$?"; 
-    if [ "$RETVAL" -eq 0 ];then
-        echo -en "\[\e[32m\]($RETVAL)"
-    else
-        echo -en "\[\e[31;1m\a\]($RETVAL)"
-    fi)\n\
-\[\e[0;1;34m\]\$ \[\e[0m\]"
+	PS1="${TITLEBAR}${orange}${reset_color}${green}\w${bold_blue}\[$(scm_prompt_info)\]${normal} "
 }
+
+# scm themeing
+SCM_THEME_PROMPT_DIRTY=" ✗"
+SCM_THEME_PROMPT_CLEAN=" ✓"
+SCM_THEME_PROMPT_PREFIX="("
+SCM_THEME_PROMPT_SUFFIX=")"
 
 safe_append_prompt_command prompt_command
